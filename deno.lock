@@ -29,5 +29,18 @@
     "https://deno.land/std@0.168.0/testing/_diff.ts": "a23e7fc2b4d8daa3e158fa06856bedf5334ce2a2831e8bf9e509717f455adb2c",
     "https://deno.land/std@0.168.0/testing/_format.ts": "cd11136e1797791045e639e9f0f4640d5b4166148796cad37e6ef75f7d7f3832",
     "https://deno.land/std@0.168.0/testing/asserts.ts": "51353e79437361d4b02d8e32f3fc83b22231bc8f8d4c841d86fd32b0b0afe940"
+  },
+  "npm": {
+    "specifiers": { "humanhash@1.0.4": "humanhash@1.0.4" },
+    "packages": {
+      "humanhash@1.0.4": {
+        "integrity": "sha512-fxOhEl/Ezv7PobYOTomDmQKWaSC0hk0mzl5et5McPtr+6LRBP7LYoeFLPjKW6xOSGmMNLj50BufrrgX+M5EvEA==",
+        "dependencies": { "uuid": "uuid@3.4.0" }
+      },
+      "uuid@3.4.0": {
+        "integrity": "sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==",
+        "dependencies": {}
+      }
+    }
   }
 }
