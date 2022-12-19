@@ -1,4 +1,4 @@
-import { repositoryName } from './git.ts';
+import { name } from './git.ts';
 
 const topLevelModuleNames = /(main|index|mod)\.(js|ts)x?$/;
 
@@ -27,7 +27,7 @@ export async function list(
   }
 
   if (stats.hasTopLevelModule) {
-    return { type: 'single', modules: [{ name: await repositoryName() }] };
+    return { type: 'single', modules: [{ name: await name() }] };
   }
 
   if (stats.hasModulesFolder) {

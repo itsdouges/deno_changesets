@@ -1,1 +1,2 @@
 src/**/.changeset
+!src/__mocks__/**/.changeset
