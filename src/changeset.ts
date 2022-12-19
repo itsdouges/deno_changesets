@@ -2,10 +2,7 @@ import { join } from 'https://deno.land/std@0.168.0/path/mod.ts';
 import HumanHasher from 'npm:humanhash@1.0.4';
 import fm from 'npm:front-matter@4.0.2';
 import { list } from './modules.ts';
-
-const versions = ['patch', 'minor', 'major'] as const;
-
-type ChangeType = typeof versions[number];
+import { ChangeType, versions } from './types.ts';
 
 interface Changeset {
   modules: { name: string; version: ChangeType }[];

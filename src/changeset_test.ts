@@ -62,5 +62,3 @@ Deno.test(async function shouldCreateChangeset(t) {
     //
   }
 });
-
-// Deno.test(function shouldDeleteChangeset() {});
