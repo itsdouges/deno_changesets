@@ -1,14 +1,16 @@
+import { repositoryName } from './git.ts';
+
 const topLevelModuleNames = /(main|index|mod)\.(js|ts)x?$/;
 
-export async function repositoryType(
-  dirIterable: AsyncIterable<Deno.DirEntry>,
-): Promise<'single-module' | 'multi-module'> {
+export async function list(
+  path: string,
+) {
   const stats = {
     hasTopLevelModule: false,
     hasModulesFolder: false,
   };
 
-  for await (const dirEntry of dirIterable) {
+  for await (const dirEntry of Deno.readDir(path)) {
     if (dirEntry.isFile && topLevelModuleNames.exec(dirEntry.name)) {
       stats.hasTopLevelModule = true;
     }
@@ -20,17 +22,17 @@ export async function repositoryType(
 
   if (stats.hasModulesFolder && stats.hasTopLevelModule) {
     throw new Error(
-      'invariant: repository should have either a top level module or nested ones inside a modules folder, but not both.',
+      'repository should have either a top level module or nested ones inside a modules folder, but not both.',
     );
   }
 
   if (stats.hasTopLevelModule) {
-    return 'single-module';
+    return { type: 'single', modules: [{ name: await repositoryName() }] };
   }
 
   if (stats.hasModulesFolder) {
-    return 'multi-module';
+    return { type: 'multi', modules: [] };
   }
 
-  throw new Error('invariant: could ascertain repository type');
+  throw new Error('invariant');
 }

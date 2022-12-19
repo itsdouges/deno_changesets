@@ -6,6 +6,6 @@
   },
   "tasks": {
     "dev": "deno run --watch main.ts",
-    "test": "deno test . --watch --allow-read"
+    "test": "deno test --watch --allow-read --allow-run"
   }
 }
