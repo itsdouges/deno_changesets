@@ -31,11 +31,37 @@
     "https://deno.land/std@0.168.0/testing/asserts.ts": "51353e79437361d4b02d8e32f3fc83b22231bc8f8d4c841d86fd32b0b0afe940"
   },
   "npm": {
-    "specifiers": { "humanhash@1.0.4": "humanhash@1.0.4" },
+    "specifiers": {
+      "front-matter@4.0.2": "front-matter@4.0.2",
+      "humanhash@1.0.4": "humanhash@1.0.4"
+    },
     "packages": {
+      "argparse@1.0.10": {
+        "integrity": "sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==",
+        "dependencies": { "sprintf-js": "sprintf-js@1.0.3" }
+      },
+      "esprima@4.0.1": {
+        "integrity": "sha512-eGuFFw7Upda+g4p+QHvnW0RyTX/SVeJBDM/gCtMARO0cLuT2HcEKnTPvhjV6aGeqrCB/sbNop0Kszm0jsaWU4A==",
+        "dependencies": {}
+      },
+      "front-matter@4.0.2": {
+        "integrity": "sha512-I8ZuJ/qG92NWX8i5x1Y8qyj3vizhXS31OxjKDu3LKP+7/qBgfIKValiZIEwoVoJKUHlhWtYrktkxV1XsX+pPlg==",
+        "dependencies": { "js-yaml": "js-yaml@3.14.1" }
+      },
       "humanhash@1.0.4": {
         "integrity": "sha512-fxOhEl/Ezv7PobYOTomDmQKWaSC0hk0mzl5et5McPtr+6LRBP7LYoeFLPjKW6xOSGmMNLj50BufrrgX+M5EvEA==",
         "dependencies": { "uuid": "uuid@3.4.0" }
+      },
+      "js-yaml@3.14.1": {
+        "integrity": "sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g==",
+        "dependencies": {
+          "argparse": "argparse@1.0.10",
+          "esprima": "esprima@4.0.1"
+        }
+      },
+      "sprintf-js@1.0.3": {
+        "integrity": "sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==",
+        "dependencies": {}
       },
       "uuid@3.4.0": {
         "integrity": "sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==",

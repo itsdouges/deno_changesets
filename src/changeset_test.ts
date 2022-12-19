@@ -34,6 +34,19 @@ Fix bug
   );
 });
 
+Deno.test(async function shouldParseChangesets() {
+  const dir = dirname(fromFileUrl(import.meta.url)) +
+    '/__mocks__/changeset_patch';
+  const { readAll } = await changeset(dir);
+
+  const actual = await readAll();
+
+  assertEquals(actual, [{
+    modules: [{ name: 'deno_changesets', version: 'patch' }],
+    description: 'Patch change',
+  }]);
+});
+
 Deno.test(async function shouldCreateChangeset(t) {
   const dir = dirname(fromFileUrl(import.meta.url)) + '/__mocks__/single';
 
