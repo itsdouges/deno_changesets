@@ -1,0 +1,11 @@
+{
+  "fmt": {
+    "options": {
+      "singleQuote": true
+    }
+  },
+  "tasks": {
+    "dev": "deno run --watch main.ts",
+    "test": "deno test . --watch --allow-read"
+  }
+}
