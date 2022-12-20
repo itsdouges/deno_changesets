@@ -11,11 +11,11 @@ import { list } from './src/modules.ts';
 import { changeset } from './src/changeset.ts';
 import { ChangeType, changeTypes } from './src/types.ts';
 import { release } from './src/release_single.ts';
-import { tags } from './src/git.ts';
+import * as git from './src/git.ts';
 
 if (import.meta.main) {
   const result = /@(\d\.\d\.\d)/.exec(Deno.mainModule);
-  const [currentVersion] = await tags();
+  const [currentVersion] = await git.tags();
   const isDevRange = lt(currentVersion, '1.0.0');
   let version = '';
 
@@ -30,7 +30,12 @@ if (import.meta.main) {
     .version(version)
     .description('🦕 Deno native way to manage versioning and changelogs.')
     .command('create', 'Create a new changeset')
-    .action(async () => {
+    .option(
+      '--commit -C',
+      'Commits the changeset after creation.',
+    )
+    .action(async ({ commit }) => {
+      const shouldCommit = !!commit;
       const repo = await list(Deno.cwd());
       const result = await prompt([{
         name: 'modules',
@@ -81,16 +86,17 @@ if (import.meta.main) {
           changeType: result.changeType as ChangeType,
         })),
         result.description || '<empty>',
+        { commit: shouldCommit },
       );
     })
     .command('release', 'Release changesets')
     .option(
       '--prod-ready -P',
-      'Moves from development to production (0.x to 1.0)',
+      'Releases a 1.0 version, will error if already 1.0 or above.',
     )
     .action(async ({ prodReady }) => {
       if (prodReady && !isDevRange) {
-        throw new Error('invariant: already in prod!');
+        throw new Error('invariant: already in production!');
       }
 
       const cRelease = await release(Deno.cwd());

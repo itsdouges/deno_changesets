@@ -14,7 +14,6 @@ There are a few constraints to consider when using deno_changesets:
 - Changelogs follow [keep a changelog](https://keepachangelog.com/en/1.0.0/)
 - Versions are stored as git tags
 - Repositories should expose a single module (subdirectory support coming soon)
-- There are no configuration options
 - Enforces minor only bumps when pre 1.0
 
 See: [Adding a module](https://deno.land/add_module) on the Deno docs.
@@ -31,6 +30,12 @@ Creates a new changeset inside the `.changeset` folder.
  ? Confirm (y/n) › Yes
 ```
 
+### Options
+
+| Option      | Description                           |
+| ----------- | ------------------------------------- |
+| --commit -C | Commits the changeset after creation. |
+
 ## Releasing
 
 Releasing collects all previously created changsets, translates them to a
@@ -44,6 +49,6 @@ changelogs, and then pushes to remote.
 
 ### Options
 
-| Option          | Description                                          |
-| --------------- | ---------------------------------------------------- |
-| --prod-ready -P | Releases from pre-1.0 to 1.0. Errors if already 1.0. |
+| Option          | Description                                                 |
+| --------------- | ----------------------------------------------------------- |
+| --prod-ready -P | Releases a 1.0 version, will error if already 1.0 or above. |

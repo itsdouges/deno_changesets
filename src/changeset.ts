@@ -3,6 +3,7 @@ import HumanHasher from 'npm:humanhash@1.0.4';
 import fm from 'npm:front-matter@4.0.2';
 import * as modules from './modules.ts';
 import { Changeset, ChangeType, changeTypes } from './types.ts';
+import * as git from './git.ts';
 
 const frontmatter = fm as unknown as typeof fm.default;
 
@@ -39,7 +40,15 @@ export async function changeset(path: string) {
     create: async (
       modules: { name: string; changeType: ChangeType }[],
       description: string,
+      { commit = false } = {},
     ) => {
+      if (commit) {
+        const dirty = await git.isDirty();
+        if (dirty) {
+          throw new Error('invariant: dirty git');
+        }
+      }
+
       modules.forEach(({ name }) => moduleInvariant(name));
 
       const content = _buildChangeset(modules, description);
@@ -52,6 +61,13 @@ export async function changeset(path: string) {
         content,
         { createNew: true },
       );
+
+      if (commit) {
+        const moduleNames = modules.map((mod) => mod.name).join(', ');
+
+        await git.add();
+        await git.commit(`changeset: [${moduleNames}] — ${description}`);
+      }
     },
     readAll: async (): Promise<Changeset[]> => {
       const changesets: Changeset[] = [];
