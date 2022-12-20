@@ -33,11 +33,13 @@ if (import.meta.main) {
         type: Checkbox,
         options: repo.modules.map((mod) => mod.name),
         minOptions: 1,
+        search: true,
       }, {
-        name: 'release_version',
+        name: 'changeType',
         message: 'What is changing for this module(s)?',
         type: Select,
         options: changeTypes.map((v) => v),
+        search: true,
       }, {
         name: 'description',
         message: 'Description',
@@ -52,7 +54,7 @@ if (import.meta.main) {
         return;
       }
 
-      if (!result.modules || !result.release_version) {
+      if (!result.modules || !result.changeType) {
         throw new Error('invariant');
       }
 
@@ -61,7 +63,7 @@ if (import.meta.main) {
       cChangeset.create(
         result.modules.map((mod) => ({
           name: mod,
-          changeType: result.release_version as ChangeType,
+          changeType: result.changeType as ChangeType,
         })),
         result.description || '<empty>',
       );
