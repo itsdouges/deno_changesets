@@ -44,10 +44,10 @@ Deno.test(async function shouldParseChangesets() {
   assertEquals(actual, [{
     modules: [{
       name: 'deno_changesets',
-      changeType: 'deprecated',
+      changeType: 'fixed',
       path: '/src/__mocks__/changeset_patch',
     }],
-    description: 'Deprecated an API, sorry!',
+    description: 'Fixed an oops, sorry!',
   }]);
 });
 

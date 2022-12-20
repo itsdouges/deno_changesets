@@ -1,10 +1,13 @@
-import { increment } from 'https://deno.land/std@0.170.0/semver/mod.ts';
+import { increment, lt } from 'https://deno.land/std@0.170.0/semver/mod.ts';
 import { changeset } from './changeset.ts';
 import * as git from './git.ts';
 import * as changelog from './changelog.ts';
-import { changeSemVerMap, ChangeType, SemVer } from './types.ts';
+import { changeTypeToSemVer, SemVer } from './types.ts';
 
-export async function release(path: string, { __dryRun = false } = {}) {
+export async function release(
+  path: string,
+  { dryRun = false, __forceVersion = '' } = {},
+) {
   const name = await git.branchName();
   if (!['main', 'master'].includes(name)) {
     throw new Error('invariant: must be ran on primary branch');
@@ -12,10 +15,17 @@ export async function release(path: string, { __dryRun = false } = {}) {
 
   const changesetManager = await changeset(path);
   const versions = await git.tags();
+  const latestVersion = __forceVersion || versions[0];
   const changesets = await changesetManager.readAll();
 
   function findSemVerChange(): SemVer {
-    const versions: Record<SemVer, boolean> = {
+    if (lt(latestVersion, '1.0.0')) {
+      // Every release during the development phase should be a minor release for simplicity.
+      // https://semver.org/#how-should-i-deal-with-revisions-in-the-0yz-initial-development-phase
+      return 'minor';
+    }
+
+    const semver: Record<SemVer, boolean> = {
       major: false,
       minor: false,
       patch: false,
@@ -23,19 +33,19 @@ export async function release(path: string, { __dryRun = false } = {}) {
 
     changesets.forEach((change) => {
       change.modules.forEach((mod) => {
-        versions[changeSemVerMap[mod.changeType]] = true;
+        semver[changeTypeToSemVer[mod.changeType]] = true;
       });
     });
 
-    if (versions.major) {
+    if (semver.major) {
       return 'major';
     }
 
-    if (versions.minor) {
+    if (semver.minor) {
       return 'minor';
     }
 
-    if (versions.patch) {
+    if (semver.patch) {
       return 'patch';
     }
 
@@ -48,20 +58,19 @@ export async function release(path: string, { __dryRun = false } = {}) {
   }
 
   const dirty = await git.isDirty();
-  if (!__dryRun && dirty) {
+  if (!dryRun && dirty) {
     throw new Error('invariant: dirty git');
   }
 
   if (versions.length === 0) {
-    // This repository has never released yet, start from 0.0.0!
-    versions.push('0.0.0');
+    // This repository has never released yet, start at 0.1.0.
+    versions.push('0.1.0');
   }
 
   return {
     increment: () => {
       const semVerChange = findSemVerChange();
-      const currentVersion = __dryRun ? '0.0.0' : versions[0];
-      const nextVersion = increment(currentVersion, semVerChange);
+      const nextVersion = increment(latestVersion, semVerChange);
       if (nextVersion === null) {
         throw new Error('invariant');
       }
@@ -69,7 +78,7 @@ export async function release(path: string, { __dryRun = false } = {}) {
       return nextVersion;
     },
     release: async (nextVersion: string) => {
-      if (__dryRun) {
+      if (dryRun) {
         return;
       }
 

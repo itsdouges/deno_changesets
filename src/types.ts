@@ -9,10 +9,10 @@ export const changeTypes = [
 
 export type SemVer = 'patch' | 'minor' | 'major';
 
-export const changeSemVerMap: Record<ChangeType, SemVer> = {
+export const changeTypeToSemVer: Record<ChangeType, SemVer> = {
   added: 'minor',
   changed: 'major',
-  deprecated: 'patch',
+  deprecated: 'minor',
   fixed: 'patch',
   removed: 'major',
   security: 'patch',

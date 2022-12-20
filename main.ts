@@ -24,7 +24,7 @@ if (import.meta.main) {
     .name('deno_changesets')
     .version(version)
     .description('🦕 Deno native way to manage versioning and changelogs.')
-    .command('create', 'Add a new changeset')
+    .command('create', 'Create a new changeset')
     .action(async () => {
       const repo = await list(Deno.cwd());
       const result = await prompt([{

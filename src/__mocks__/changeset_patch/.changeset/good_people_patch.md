@@ -1,5 +1,5 @@
 ---
-'deno_changesets': deprecated
+'deno_changesets': fixed
 ---
 
-Deprecated an API, sorry!
+Fixed an oops, sorry!
