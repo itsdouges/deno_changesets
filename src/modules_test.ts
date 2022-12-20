@@ -1,11 +1,11 @@
 import {
   assertEquals,
   assertRejects,
-} from 'https://deno.land/std@0.168.0/testing/asserts.ts';
+} from 'https://deno.land/std@0.170.0/testing/asserts.ts';
 import {
   dirname,
   fromFileUrl,
-} from 'https://deno.land/std@0.168.0/path/mod.ts';
+} from 'https://deno.land/std@0.170.0/path/mod.ts';
 import { list } from './modules.ts';
 
 Deno.test(async function shouldReturnSingleModule() {

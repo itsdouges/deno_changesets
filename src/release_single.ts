@@ -73,6 +73,7 @@ export async function release(path: string, __forceCurrentVersion?: string) {
       await changelog.upsert(changesets);
       await changesetManager.deleteAll();
       await git.add();
+      await git.commit('Version Modules');
       await git.push();
       await git.createTag(version);
       await git.push({ tags: true });

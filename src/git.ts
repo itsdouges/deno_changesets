@@ -1,4 +1,4 @@
-import { basename } from 'https://deno.land/std@0.168.0/path/mod.ts';
+import { basename } from 'https://deno.land/std@0.170.0/path/mod.ts';
 
 export async function name(): Promise<string> {
   const p = Deno.run({
@@ -68,6 +68,18 @@ export async function push({ tags = false } = {}): Promise<void> {
 export async function add(): Promise<void> {
   const p = Deno.run({
     cmd: ['git', 'add', '.'],
+  });
+
+  const result = await p.status();
+
+  if (!result.success) {
+    throw new Error('invariant');
+  }
+}
+
+export async function commit(description: string): Promise<void> {
+  const p = Deno.run({
+    cmd: ['git', 'commit', '-m', description],
   });
 
   const result = await p.status();

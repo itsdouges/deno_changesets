@@ -1,5 +1,5 @@
-import { join } from 'https://deno.land/std@0.168.0/path/mod.ts';
-import { assertEquals } from 'https://deno.land/std@0.168.0/testing/asserts.ts';
+import { join } from 'https://deno.land/std@0.170.0/path/mod.ts';
+import { assertEquals } from 'https://deno.land/std@0.170.0/testing/asserts.ts';
 import { release } from './release_single.ts';
 
 Deno.test(async function shouldIncrementByPatch() {

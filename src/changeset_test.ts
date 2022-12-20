@@ -1,12 +1,12 @@
 import {
   dirname,
   fromFileUrl,
-} from 'https://deno.land/std@0.168.0/path/mod.ts';
+} from 'https://deno.land/std@0.170.0/path/mod.ts';
 import { _buildChangeset, changeset } from './changeset.ts';
 import {
   assertEquals,
   assertRejects,
-} from 'https://deno.land/std@0.168.0/testing/asserts.ts';
+} from 'https://deno.land/std@0.170.0/testing/asserts.ts';
 
 Deno.test(async function shouldThrowCreatingChangesetWithUnknownModule() {
   const dir = dirname(fromFileUrl(import.meta.url)) + '/__mocks__/single';
