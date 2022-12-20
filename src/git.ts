@@ -53,7 +53,9 @@ export async function createTag(tag: string): Promise<void> {
 export async function push({ tags = false } = {}): Promise<void> {
   const name = await branchName();
   const p = Deno.run({
-    cmd: ['git', 'push', 'origin', name, tags ? '--tags' : ''],
+    cmd: tags
+      ? ['git', 'push', 'origin', name, '--tags']
+      : ['git', 'push', 'origin', name],
   });
 
   const result = await p.status();
