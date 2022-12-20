@@ -42,6 +42,11 @@ export async function release(path: string, __forceCurrentVersion?: string) {
     throw new Error('invariant: no changesets');
   }
 
+  const dirty = await git.isDirty();
+  if (dirty) {
+    throw new Error('invariant: dirty git');
+  }
+
   if (versions.length === 0) {
     // This repository has never released yet, start from 0.0.0!
     versions.push('0.0.0');

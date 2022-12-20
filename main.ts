@@ -9,6 +9,7 @@ import {
 import { list } from './src/modules.ts';
 import { changeset } from './src/changeset.ts';
 import { ChangeType, versions } from './src/types.ts';
+import { release } from './src/release_single.ts';
 
 if (import.meta.main) {
   let version = '';
@@ -55,9 +56,9 @@ if (import.meta.main) {
         throw new Error('invariant');
       }
 
-      const { create } = await changeset(Deno.cwd());
+      const cChangeset = await changeset(Deno.cwd());
 
-      create(
+      cChangeset.create(
         result.modules.map((mod) => ({
           name: mod,
           change: result.release_version as ChangeType,
@@ -66,8 +67,12 @@ if (import.meta.main) {
       );
     })
     .command('release', 'Release changesets')
-    .action(() => {
-      console.log('release!');
+    .action(async () => {
+      const cRelease = await release(Deno.cwd());
+
+      const nextVersion = cRelease.increment();
+
+      console.log(nextVersion);
     })
     .parse(Deno.args);
 }

@@ -73,3 +73,26 @@ export async function add(): Promise<void> {
     throw new Error('invariant');
   }
 }
+
+export async function isDirty(): Promise<boolean> {
+  const p = Deno.run({
+    cmd: ['git', 'status', '--short'],
+    stdout: 'piped',
+  });
+
+  const result = await p.status();
+
+  if (!result.success) {
+    throw new Error('invariant');
+  }
+
+  p.close();
+
+  const output = await p.output();
+
+  if (new TextDecoder().decode(output).trim()) {
+    return true;
+  }
+
+  return false;
+}
