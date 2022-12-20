@@ -5,6 +5,11 @@ import * as changelog from './changelog.ts';
 import { ChangeType } from './types.ts';
 
 export async function release(path: string, __forceCurrentVersion?: string) {
+  const name = await git.branchName();
+  if (!['main', 'master'].includes(name)) {
+    throw new Error('invariant: must be ran on primary branch');
+  }
+
   const changesetManager = await changeset(path);
   const versions = await git.tags();
   const changesets = await changesetManager.readAll();

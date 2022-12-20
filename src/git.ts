@@ -16,7 +16,7 @@ export async function name(): Promise<string> {
 
   p.close();
 
-  return basename(new TextDecoder().decode(output)).replace('\n', '');
+  return basename(new TextDecoder().decode(output)).trim();
 }
 
 export async function tags(): Promise<string[]> {
@@ -95,4 +95,23 @@ export async function isDirty(): Promise<boolean> {
   }
 
   return false;
+}
+
+export async function branchName(): Promise<string> {
+  const p = Deno.run({
+    cmd: ['git', 'rev-parse', '--abbrev-ref', 'HEAD'],
+    stdout: 'piped',
+  });
+
+  const result = await p.status();
+
+  if (!result.success) {
+    throw new Error('invariant');
+  }
+
+  const output = await p.output();
+
+  p.close();
+
+  return basename(new TextDecoder().decode(output)).trim();
 }
