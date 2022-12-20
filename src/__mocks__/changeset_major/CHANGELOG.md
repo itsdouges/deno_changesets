@@ -9,4 +9,4 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Deprecated
 
-- Deprecated an API, sorry!
+- Deprecated the deprecation, sorry!

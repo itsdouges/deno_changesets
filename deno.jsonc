@@ -7,6 +7,6 @@
   "tasks": {
     "changeset": "deno run --allow-read --allow-write --allow-run main.ts",
     "dev": "deno run --watch main.ts",
-    "test": "deno test --watch --allow-read --allow-write --allow-run"
+    "test": "deno test --watch -A"
   }
 }

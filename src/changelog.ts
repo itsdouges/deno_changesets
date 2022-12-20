@@ -53,11 +53,12 @@ export async function upsert(
 
   for (const module of moduleChanges) {
     const path = join(module.path, 'CHANGELOG.md');
+    const absolutePath = join(Deno.cwd(), path);
     let changelog: Changelog;
     let action: 'update' | 'create';
 
     try {
-      const md = await Deno.readTextFile(path);
+      const md = await Deno.readTextFile(absolutePath);
       changelog = parser(md);
       action = 'update';
     } catch (_) {
@@ -91,7 +92,7 @@ export async function upsert(
       continue;
     }
 
-    await Deno.writeTextFile(join(Deno.cwd(), path), md);
+    await Deno.writeTextFile(absolutePath, md);
   }
 
   return changelogs;
