@@ -2,7 +2,7 @@ import { increment } from 'https://deno.land/std@0.170.0/semver/mod.ts';
 import { changeset } from './changeset.ts';
 import * as git from './git.ts';
 import * as changelog from './changelog.ts';
-import { ChangeType } from './types.ts';
+import { changeSemVerMap, ChangeType, SemVer } from './types.ts';
 
 export async function release(path: string, { __dryRun = false } = {}) {
   const name = await git.branchName();
@@ -14,8 +14,8 @@ export async function release(path: string, { __dryRun = false } = {}) {
   const versions = await git.tags();
   const changesets = await changesetManager.readAll();
 
-  function findReleaseType(): ChangeType {
-    const versions: Record<ChangeType, boolean> = {
+  function findSemVerChange(): SemVer {
+    const versions: Record<SemVer, boolean> = {
       major: false,
       minor: false,
       patch: false,
@@ -23,7 +23,7 @@ export async function release(path: string, { __dryRun = false } = {}) {
 
     changesets.forEach((change) => {
       change.modules.forEach((mod) => {
-        versions[mod.version] = true;
+        versions[changeSemVerMap[mod.changeType]] = true;
       });
     });
 
@@ -59,26 +59,26 @@ export async function release(path: string, { __dryRun = false } = {}) {
 
   return {
     increment: () => {
-      const releaseType = findReleaseType();
+      const semVerChange = findSemVerChange();
       const currentVersion = __dryRun ? '0.0.0' : versions[0];
-      const nextVersion = increment(currentVersion, releaseType);
+      const nextVersion = increment(currentVersion, semVerChange);
       if (nextVersion === null) {
         throw new Error('invariant');
       }
 
       return nextVersion;
     },
-    release: async (version: string) => {
+    release: async (nextVersion: string) => {
       if (__dryRun) {
         return;
       }
 
-      await changelog.upsert(changesets);
+      await changelog.upsert(changesets, nextVersion);
       await changesetManager.deleteAll();
       await git.add();
       await git.commit('Version Modules');
       await git.push();
-      await git.createTag(version);
+      await git.createTag(nextVersion);
       await git.push({ tags: true });
     },
   };

@@ -13,20 +13,20 @@ Deno.test(async function shouldThrowCreatingChangesetWithUnknownModule() {
   const { create } = await changeset(dir);
 
   assertRejects(async () => {
-    await create([{ name: 'unknown', change: 'patch' }], 'Fix bug');
+    await create([{ name: 'unknown', changeType: 'fixed' }], 'Fix bug');
   });
 });
 
 Deno.test(function shouldBuildChangeset() {
   const actual = _buildChangeset(
-    [{ name: 'deno_changesets', change: 'patch' }],
+    [{ name: 'deno_changesets', changeType: 'fixed' }],
     'Fix bug',
   );
 
   assertEquals(
     actual,
     `---
-'deno_changesets': patch
+'deno_changesets': fixed
 ---
 
 Fix bug
@@ -44,10 +44,10 @@ Deno.test(async function shouldParseChangesets() {
   assertEquals(actual, [{
     modules: [{
       name: 'deno_changesets',
-      version: 'patch',
+      changeType: 'deprecated',
       path: '/src/__mocks__/changeset_patch',
     }],
-    description: 'Patch change',
+    description: 'Deprecated an API, sorry!',
   }]);
 });
 
@@ -57,7 +57,7 @@ Deno.test(async function shouldCreateChangeset(t) {
   const { create, deleteAll } = await changeset(dir);
 
   await t.step('create', async () => {
-    await create([{ name: 'deno_changesets', change: 'patch' }], 'Fix bug');
+    await create([{ name: 'deno_changesets', changeType: 'fixed' }], 'Fix bug');
   });
 
   try {

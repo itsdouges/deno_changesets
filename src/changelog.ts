@@ -1,9 +1,94 @@
-import { parser } from 'https://deno.land/x/changelog@v2.0.0/mod.ts';
-import { Changeset } from './types.ts';
+import { join } from 'https://deno.land/std@0.170.0/path/mod.ts';
+import {
+  Change,
+  Changelog,
+  parser,
+  Release,
+} from 'https://deno.land/x/changelog@v2.0.0/mod.ts';
+import { Changeset, ChangeType } from './types.ts';
 
-export async function upsert(changesets: Changeset[]) {
+function sortByModule(changesets: Changeset[]) {
+  const changeMap: Record<
+    string,
+    {
+      name: string;
+      path: string;
+      changes: { type: ChangeType; description: string }[];
+    }
+  > = {};
+
   for (const { description, modules } of changesets) {
     for (const module of modules) {
+      if (!changeMap[module.name]) {
+        changeMap[module.name] = {
+          name: module.name,
+          changes: [],
+          path: module.path,
+        };
+      }
+
+      changeMap[module.name].changes.push({
+        type: module.changeType,
+        description,
+      });
     }
   }
+
+  return Object.values(changeMap);
+}
+
+export async function upsert(
+  changesets: Changeset[],
+  nextVersion: string,
+  { __dryRun = false } = {},
+) {
+  const changelogs: {
+    md: string;
+    path: string;
+    action: 'update' | 'create';
+  }[] = [];
+
+  const moduleChanges = sortByModule(changesets);
+
+  for (const module of moduleChanges) {
+    const path = join(module.path, 'CHANGELOG.md');
+    let changelog: Changelog;
+    let action: 'update' | 'create';
+
+    try {
+      const md = await Deno.readTextFile(path);
+      changelog = parser(md);
+      action = 'update';
+    } catch (_) {
+      changelog = new Changelog(module.name);
+      action = 'create';
+    }
+
+    const release = new Release(
+      nextVersion,
+    );
+
+    // for (const change of module.changes) {
+    //   //   release.addChange(change.type,);
+    // }
+
+    changelog.addRelease(
+      release,
+    );
+
+    changelogs.push({
+      md: changelog.toString(),
+      action,
+      path,
+    });
+
+    console.log(changelog.toString());
+
+    if (__dryRun) {
+      // Skip persisting to the filesystem.
+      break;
+    }
+  }
+
+  return changelogs;
 }

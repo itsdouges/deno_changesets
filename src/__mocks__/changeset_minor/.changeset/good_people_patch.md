@@ -1,5 +1,5 @@
 ---
-'deno_changesets': patch
+'deno_changesets': fixed
 ---
 
-Patch change
+Fixed a bug, woo!

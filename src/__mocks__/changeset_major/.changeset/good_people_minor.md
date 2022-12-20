@@ -1,5 +1,5 @@
 ---
-'deno_changesets': minor
+'deno_changesets': added
 ---
 
-Minor change
+Added a new API, yay!

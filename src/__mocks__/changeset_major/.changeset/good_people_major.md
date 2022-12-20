@@ -1,5 +1,5 @@
 ---
-'deno_changesets': major
+'deno_changesets': removed
 ---
 
-Major change
+Removed an API, sorry!

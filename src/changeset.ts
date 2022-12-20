@@ -2,16 +2,16 @@ import { join } from 'https://deno.land/std@0.170.0/path/mod.ts';
 import HumanHasher from 'npm:humanhash@1.0.4';
 import fm from 'npm:front-matter@4.0.2';
 import * as modules from './modules.ts';
-import { Changeset, ChangeType, versions } from './types.ts';
+import { Changeset, ChangeType, changeTypes } from './types.ts';
 
 const frontmatter = fm as unknown as typeof fm.default;
 
 export function _buildChangeset(
-  modules: { name: string; change: ChangeType }[],
+  modules: { name: string; changeType: ChangeType }[],
   description: string,
 ): string {
   return `---
-${modules.map((mod) => `'${mod.name}': ${mod.change}`).join('\n')}
+${modules.map((mod) => `'${mod.name}': ${mod.changeType}`).join('\n')}
 ---
 
 ${description}
@@ -29,15 +29,15 @@ export async function changeset(path: string) {
     }
   }
 
-  function versionInvariant(version: ChangeType) {
-    if (!versions.includes(version)) {
-      throw new Error(`invariant: version must be one of ${versions}`);
+  function changeTypeInvariant(changeType: ChangeType) {
+    if (!changeTypes.includes(changeType)) {
+      throw new Error(`invariant: changeType must be one of ${changeTypes}`);
     }
   }
 
   return {
     create: async (
-      modules: { name: string; change: ChangeType }[],
+      modules: { name: string; changeType: ChangeType }[],
       description: string,
     ) => {
       modules.forEach(({ name }) => moduleInvariant(name));
@@ -71,16 +71,18 @@ export async function changeset(path: string) {
 
         changesets.push({
           description: parsed.body.trim(),
-          modules: Object.entries(parsed.attributes).map(([name, version]) => {
-            moduleInvariant(name);
-            versionInvariant(version);
+          modules: Object.entries(parsed.attributes).map(
+            ([name, changeType]) => {
+              moduleInvariant(name);
+              changeTypeInvariant(changeType);
 
-            return {
-              name,
-              version: version,
-              path: moduleMap[name].path,
-            };
-          }),
+              return {
+                name,
+                changeType,
+                path: moduleMap[name].path,
+              };
+            },
+          ),
         });
       }
 
