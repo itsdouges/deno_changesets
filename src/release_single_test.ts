@@ -4,16 +4,16 @@ import { release } from './release_single.ts';
 
 Deno.test(async function shouldIncrementByPatch() {
   const path = join(Deno.cwd(), 'src/__mocks__/changeset_patch');
-  const { increment } = await release(path, '0.1.0');
+  const { increment } = await release(path, { __dryRun: true });
 
   const actual = increment();
 
-  assertEquals(actual, '0.1.1');
+  assertEquals(actual, '0.0.1');
 });
 
 Deno.test(async function shouldIncrementByMinor() {
   const path = join(Deno.cwd(), 'src/__mocks__/changeset_minor');
-  const { increment } = await release(path, '0.0.1');
+  const { increment } = await release(path, { __dryRun: true });
 
   const actual = increment();
 
@@ -22,7 +22,7 @@ Deno.test(async function shouldIncrementByMinor() {
 
 Deno.test(async function shouldIncrementByMajor() {
   const path = join(Deno.cwd(), 'src/__mocks__/changeset_major');
-  const { increment } = await release(path, '0.0.1');
+  const { increment } = await release(path, { __dryRun: true });
 
   const actual = increment();
 

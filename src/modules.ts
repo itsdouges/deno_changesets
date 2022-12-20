@@ -27,7 +27,10 @@ export async function list(
   }
 
   if (stats.hasTopLevelModule) {
-    return { type: 'single', modules: [{ name: await name() }] } as const;
+    return {
+      type: 'single',
+      modules: [{ name: await name(), path: path.replace(Deno.cwd(), '') }],
+    } as const;
   }
 
   if (stats.hasModulesFolder) {

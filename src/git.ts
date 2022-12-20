@@ -89,7 +89,11 @@ export async function commit(description: string): Promise<void> {
   }
 }
 
-export async function isDirty(): Promise<boolean> {
+export async function isDirty(__ignore = false): Promise<boolean> {
+  if (__ignore) {
+    return false;
+  }
+
   const p = Deno.run({
     cmd: ['git', 'status', '--short'],
     stdout: 'piped',

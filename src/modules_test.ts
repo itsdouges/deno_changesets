@@ -15,7 +15,7 @@ Deno.test(async function shouldReturnSingleModule() {
 
   assertEquals(actual, {
     type: 'single',
-    modules: [{ name: 'deno_changesets' }],
+    modules: [{ name: 'deno_changesets', path: '/src/__mocks__/single' }],
   });
 });
 

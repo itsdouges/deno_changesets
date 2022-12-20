@@ -4,7 +4,7 @@ import * as git from './git.ts';
 import * as changelog from './changelog.ts';
 import { ChangeType } from './types.ts';
 
-export async function release(path: string, __forceCurrentVersion?: string) {
+export async function release(path: string, { __dryRun = false } = {}) {
   const name = await git.branchName();
   if (!['main', 'master'].includes(name)) {
     throw new Error('invariant: must be ran on primary branch');
@@ -48,7 +48,7 @@ export async function release(path: string, __forceCurrentVersion?: string) {
   }
 
   const dirty = await git.isDirty();
-  if (dirty) {
+  if (!__dryRun && dirty) {
     throw new Error('invariant: dirty git');
   }
 
@@ -60,9 +60,8 @@ export async function release(path: string, __forceCurrentVersion?: string) {
   return {
     increment: () => {
       const releaseType = findReleaseType();
-      const currentVersion = __forceCurrentVersion || versions[0];
+      const currentVersion = __dryRun ? '0.0.0' : versions[0];
       const nextVersion = increment(currentVersion, releaseType);
-
       if (nextVersion === null) {
         throw new Error('invariant');
       }
@@ -70,6 +69,10 @@ export async function release(path: string, __forceCurrentVersion?: string) {
       return nextVersion;
     },
     release: async (version: string) => {
+      if (__dryRun) {
+        return;
+      }
+
       await changelog.upsert(changesets);
       await changesetManager.deleteAll();
       await git.add();
