@@ -1,11 +1,12 @@
-import { Command } from 'https://deno.land/x/cliffy@v0.25.5/command/mod.ts';
+import { Command } from 'https://deno.land/x/cliffy@v0.25.6/command/mod.ts';
 import {
   Checkbox,
   Confirm,
   Input,
   prompt,
   Select,
-} from 'https://deno.land/x/cliffy@v0.25.5/prompt/mod.ts';
+} from 'https://deno.land/x/cliffy@v0.25.6/prompt/mod.ts';
+import { lt } from 'https://deno.land/std@0.170.0/semver/mod.ts';
 import { list } from './src/modules.ts';
 import { changeset } from './src/changeset.ts';
 import { ChangeType, changeTypes } from './src/types.ts';
@@ -13,8 +14,11 @@ import { release } from './src/release_single.ts';
 import { tags } from './src/git.ts';
 
 if (import.meta.main) {
-  let version = '';
   const result = /@(\d\.\d\.\d)/.exec(Deno.mainModule);
+  const [currentVersion] = await tags();
+  const isDevRange = lt(currentVersion, '1.0.0');
+  let version = '';
+
   if (result) {
     version = result[1];
   } else {
@@ -40,16 +44,21 @@ if (import.meta.main) {
         options: repo.modules.map((mod) => mod.name),
         minOptions: 1,
         search: true,
+        hint: 'Each change should be a separate changeset.',
       }, {
         name: 'changeType',
         message: 'What type of change?',
         type: Select,
         options: changeTypes.map((v) => v),
         search: true,
+        hint: isDevRange
+          ? 'As this module is pre-1.0 all changes will be considered minor.'
+          : 'Changed and removed are considered breaking.',
       }, {
         name: 'description',
         message: 'Description',
         type: Input,
+        hint: 'Describe the change for humans, keep it short and concise.',
       }, {
         name: 'confirm',
         message: 'Confirm',
@@ -75,10 +84,17 @@ if (import.meta.main) {
       );
     })
     .command('release', 'Release changesets')
-    .action(async () => {
-      const [currentVersion] = await tags();
+    .option(
+      '--prod-ready -P',
+      'Moves from development to production (0.x to 1.0)',
+    )
+    .action(async ({ prodReady }) => {
+      if (prodReady && !isDevRange) {
+        throw new Error('invariant: already in prod!');
+      }
+
       const cRelease = await release(Deno.cwd());
-      const nextVersion = cRelease.increment();
+      const nextVersion = prodReady ? '1.0.0' : cRelease.increment();
       const result = await prompt([{
         name: 'confirm',
         message: `Will publish from ${currentVersion} to ${nextVersion}`,
