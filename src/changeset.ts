@@ -1,7 +1,7 @@
 import { join } from 'https://deno.land/std@0.170.0/path/mod.ts';
 import HumanHasher from 'npm:humanhash@1.0.4';
 import fm from 'npm:front-matter@4.0.2';
-import { list } from './modules.ts';
+import * as modules from './modules.ts';
 import { Changeset, ChangeType, versions } from './types.ts';
 
 const frontmatter = fm as unknown as typeof fm.default;
@@ -19,8 +19,8 @@ ${description}
 }
 
 export async function changeset(path: string) {
-  const repository = await list(path);
   const humanhash = new HumanHasher();
+  const repository = await modules.list(path);
   const outputFolder = join(path, '.changeset');
 
   function moduleInvariant(name: string) {
@@ -65,8 +65,12 @@ export async function changeset(path: string) {
           join(outputFolder, dirEntry.name),
         );
         const parsed = frontmatter<Record<string, ChangeType>>(contents);
+        const moduleMap = repository.modules.reduce<
+          Record<string, modules.Module>
+        >((acc, obj) => Object.assign(acc, { [obj.name]: obj }), {});
 
         changesets.push({
+          description: parsed.body.trim(),
           modules: Object.entries(parsed.attributes).map(([name, version]) => {
             moduleInvariant(name);
             versionInvariant(version);
@@ -74,9 +78,9 @@ export async function changeset(path: string) {
             return {
               name,
               version: version,
+              path: moduleMap[name].path,
             };
           }),
-          description: parsed.body.trim(),
         });
       }
 

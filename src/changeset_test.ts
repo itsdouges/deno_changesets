@@ -42,7 +42,11 @@ Deno.test(async function shouldParseChangesets() {
   const actual = await readAll();
 
   assertEquals(actual, [{
-    modules: [{ name: 'deno_changesets', version: 'patch' }],
+    modules: [{
+      name: 'deno_changesets',
+      version: 'patch',
+      path: '/src/__mocks__/changeset_patch',
+    }],
     description: 'Patch change',
   }]);
 });

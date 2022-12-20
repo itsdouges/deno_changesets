@@ -30,6 +30,12 @@
     "https://deno.land/std@0.170.0/testing/_diff.ts": "a23e7fc2b4d8daa3e158fa06856bedf5334ce2a2831e8bf9e509717f455adb2c",
     "https://deno.land/std@0.170.0/testing/_format.ts": "cd11136e1797791045e639e9f0f4640d5b4166148796cad37e6ef75f7d7f3832",
     "https://deno.land/std@0.170.0/testing/asserts.ts": "51353e79437361d4b02d8e32f3fc83b22231bc8f8d4c841d86fd32b0b0afe940",
+    "https://deno.land/x/changelog@v2.0.0/mod.ts": "7a00ea7902e201813ca6057cedd03b637b38c6e28456cee4c8d4d46dcd6a2d9d",
+    "https://deno.land/x/changelog@v2.0.0/src/Change.ts": "2c02a41fa79d676407725b1088b03722086aba033cc6807f70d4a57777c9ff4d",
+    "https://deno.land/x/changelog@v2.0.0/src/Changelog.ts": "2ed2696d4ed72161ce6e4aaaa528576e07615f07af7dad0237171b75668469e5",
+    "https://deno.land/x/changelog@v2.0.0/src/Release.ts": "aca5d799efc2327b37e5cc9793976a29133d25752d1d749ad761cc40fcb02c52",
+    "https://deno.land/x/changelog@v2.0.0/src/deps.ts": "bfe98d1bfc41280b27399e5aefbdd2509d834361e773c6fedde0f8929e5bd4fa",
+    "https://deno.land/x/changelog@v2.0.0/src/parser.ts": "de666f3dc519c1a140ce4c8d3f740750991ea678d18bb6fa4aa44187466be3b6",
     "https://deno.land/x/cliffy@v0.25.5/_utils/distance.ts": "02af166952c7c358ac83beae397aa2fbca4ad630aecfcd38d92edb1ea429f004",
     "https://deno.land/x/cliffy@v0.25.5/ansi/ansi_escapes.ts": "885f61f343223f27b8ec69cc138a54bea30542924eacd0f290cd84edcf691387",
     "https://deno.land/x/cliffy@v0.25.5/ansi/chain.ts": "31fb9fcbf72fed9f3eb9b9487270d2042ccd46a612d07dd5271b1a80ae2140a0",
@@ -105,7 +111,8 @@
     "https://deno.land/x/cliffy@v0.25.5/table/layout.ts": "46bf10ae5430cf4fbb92f23d588230e9c6336edbdb154e5c9581290562b169f4",
     "https://deno.land/x/cliffy@v0.25.5/table/row.ts": "5f519ba7488d2ef76cbbf50527f10f7957bfd668ce5b9169abbc44ec88302645",
     "https://deno.land/x/cliffy@v0.25.5/table/table.ts": "ec204c9d08bb3ff1939c5ac7412a4c9ed7d00925d4fc92aff9bfe07bd269258d",
-    "https://deno.land/x/cliffy@v0.25.5/table/utils.ts": "187bb7dcbcfb16199a5d906113f584740901dfca1007400cba0df7dcd341bc29"
+    "https://deno.land/x/cliffy@v0.25.5/table/utils.ts": "187bb7dcbcfb16199a5d906113f584740901dfca1007400cba0df7dcd341bc29",
+    "https://deno.land/x/semver@v1.4.0/mod.ts": "c3e08f7f0a3e625015ecc9a46cf79a9dc3f081f3c5b3037d3c49c0773e58d265"
   },
   "npm": {
     "specifiers": {

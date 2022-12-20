@@ -2,9 +2,19 @@ import { name } from './git.ts';
 
 const topLevelModuleNames = /(main|index|mod)\.(js|ts)x?$/;
 
+export interface Module {
+  name: string;
+  path: string;
+}
+
+export interface Repository {
+  type: 'multi' | 'single';
+  modules: Module[];
+}
+
 export async function list(
   path: string,
-) {
+): Promise<Repository> {
   const stats = {
     hasTopLevelModule: false,
     hasModulesFolder: false,
@@ -30,11 +40,11 @@ export async function list(
     return {
       type: 'single',
       modules: [{ name: await name(), path: path.replace(Deno.cwd(), '') }],
-    } as const;
+    };
   }
 
   if (stats.hasModulesFolder) {
-    return { type: 'multi', modules: [] } as const;
+    return { type: 'multi', modules: [] };
   }
 
   throw new Error('invariant');
