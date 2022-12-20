@@ -8,7 +8,7 @@ import {
 } from 'https://deno.land/x/cliffy@v0.25.5/prompt/mod.ts';
 import { list } from './src/modules.ts';
 import { changeset } from './src/changeset.ts';
-import { ChangeType, versions } from './src/types.ts';
+import { ChangeType, changeTypes } from './src/types.ts';
 import { release } from './src/release_single.ts';
 
 if (import.meta.main) {
@@ -35,9 +35,9 @@ if (import.meta.main) {
         minOptions: 1,
       }, {
         name: 'release_version',
-        message: 'What should the release be for this module(s)?',
+        message: 'What is changing for this module(s)?',
         type: Select,
-        options: versions.map((v) => v),
+        options: changeTypes.map((v) => v),
       }, {
         name: 'description',
         message: 'Description',
@@ -61,7 +61,7 @@ if (import.meta.main) {
       cChangeset.create(
         result.modules.map((mod) => ({
           name: mod,
-          change: result.release_version as ChangeType,
+          changeType: result.release_version as ChangeType,
         })),
         result.description || '<empty>',
       );

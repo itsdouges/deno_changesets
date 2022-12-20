@@ -5,6 +5,7 @@ import {
   parser,
   Release,
 } from 'https://deno.land/x/changelog@v2.0.0/mod.ts';
+import { format } from './deno.ts';
 import { Changeset, ChangeType } from './types.ts';
 
 function sortByModule(changesets: Changeset[]) {
@@ -40,7 +41,7 @@ function sortByModule(changesets: Changeset[]) {
 export async function upsert(
   changesets: Changeset[],
   nextVersion: string,
-  { __dryRun = false } = {},
+  { __dryRun = false, __date = new Date() } = {},
 ) {
   const changelogs: {
     md: string;
@@ -66,28 +67,31 @@ export async function upsert(
 
     const release = new Release(
       nextVersion,
+      __date,
     );
 
-    // for (const change of module.changes) {
-    //   //   release.addChange(change.type,);
-    // }
+    for (const change of module.changes) {
+      release.addChange(change.type, new Change(change.description));
+    }
 
     changelog.addRelease(
       release,
     );
 
+    const md = await format(changelog.toString(), 'md');
+
     changelogs.push({
-      md: changelog.toString(),
+      md,
       action,
       path,
     });
 
-    console.log(changelog.toString());
-
     if (__dryRun) {
       // Skip persisting to the filesystem.
-      break;
+      continue;
     }
+
+    await Deno.writeTextFile(join(Deno.cwd(), path), md);
   }
 
   return changelogs;
