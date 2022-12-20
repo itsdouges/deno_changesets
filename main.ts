@@ -68,6 +68,9 @@ if (import.meta.main) {
         name: 'confirm',
         message: 'Confirm',
         type: Confirm,
+        hint: shouldCommit
+          ? 'Will add changeset to a commit.'
+          : 'Will not add changeset to a commit.',
       }]);
 
       if (!result.confirm) {
