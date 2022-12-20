@@ -10,6 +10,7 @@ import { list } from './src/modules.ts';
 import { changeset } from './src/changeset.ts';
 import { ChangeType, changeTypes } from './src/types.ts';
 import { release } from './src/release_single.ts';
+import { tags } from './src/git.ts';
 
 if (import.meta.main) {
   let version = '';
@@ -29,14 +30,19 @@ if (import.meta.main) {
       const repo = await list(Deno.cwd());
       const result = await prompt([{
         name: 'modules',
-        message: 'Select module(s) to create a changeset',
+        default: repo.modules.length === 1
+          ? repo.modules.map((mod) => mod.name)
+          : [],
+        message: repo.modules.length > 1
+          ? 'Select one or more modules'
+          : 'Select a module',
         type: Checkbox,
         options: repo.modules.map((mod) => mod.name),
         minOptions: 1,
         search: true,
       }, {
         name: 'changeType',
-        message: 'What is changing for this module(s)?',
+        message: 'What type of change?',
         type: Select,
         options: changeTypes.map((v) => v),
         search: true,
@@ -46,7 +52,7 @@ if (import.meta.main) {
         type: Input,
       }, {
         name: 'confirm',
-        message: 'Confirm create',
+        message: 'Confirm',
         type: Confirm,
       }]);
 
@@ -70,11 +76,12 @@ if (import.meta.main) {
     })
     .command('release', 'Release changesets')
     .action(async () => {
+      const [currentVersion] = await tags();
       const cRelease = await release(Deno.cwd());
       const nextVersion = cRelease.increment();
       const result = await prompt([{
         name: 'confirm',
-        message: `Release ${nextVersion}`,
+        message: `Will publish from ${currentVersion} to ${nextVersion}`,
         type: Confirm,
       }]);
 
