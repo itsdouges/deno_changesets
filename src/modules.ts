@@ -27,11 +27,11 @@ export async function list(
   }
 
   if (stats.hasTopLevelModule) {
-    return { type: 'single', modules: [{ name: await name() }] };
+    return { type: 'single', modules: [{ name: await name() }] } as const;
   }
 
   if (stats.hasModulesFolder) {
-    return { type: 'multi', modules: [] };
+    return { type: 'multi', modules: [] } as const;
   }
 
   throw new Error('invariant');

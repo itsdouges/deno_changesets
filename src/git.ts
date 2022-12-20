@@ -37,3 +37,39 @@ export async function tags(): Promise<string[]> {
 
   return new TextDecoder().decode(output).split('\n').filter(Boolean);
 }
+
+export async function createTag(tag: string): Promise<void> {
+  const p = Deno.run({
+    cmd: ['git', 'tag', tag],
+  });
+
+  const result = await p.status();
+
+  if (!result.success) {
+    throw new Error('invariant');
+  }
+}
+
+export async function push({ tags = false } = {}): Promise<void> {
+  const p = Deno.run({
+    cmd: ['git', 'push', tags ? '--tags' : ''],
+  });
+
+  const result = await p.status();
+
+  if (!result.success) {
+    throw new Error('invariant');
+  }
+}
+
+export async function add(): Promise<void> {
+  const p = Deno.run({
+    cmd: ['git', 'add', '.'],
+  });
+
+  const result = await p.status();
+
+  if (!result.success) {
+    throw new Error('invariant');
+  }
+}

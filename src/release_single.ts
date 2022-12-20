@@ -1,12 +1,13 @@
 import { increment } from 'https://deno.land/std@0.170.0/semver/mod.ts';
 import { changeset } from './changeset.ts';
-import { tags } from './git.ts';
+import * as git from './git.ts';
+import * as changelog from './changelog.ts';
 import { ChangeType } from './types.ts';
 
 export async function release(path: string, __forceCurrentVersion?: string) {
-  const { readAll } = await changeset(path);
-  const versions = await tags();
-  const changesets = await readAll();
+  const changesetManager = await changeset(path);
+  const versions = await git.tags();
+  const changesets = await changesetManager.readAll();
 
   function findReleaseType(): ChangeType {
     const versions: Record<ChangeType, boolean> = {
@@ -38,7 +39,7 @@ export async function release(path: string, __forceCurrentVersion?: string) {
 
   if (!changesets.length) {
     // Nothing to do.
-    throw new Error('invariant: no changesets to release');
+    throw new Error('invariant: no changesets');
   }
 
   if (versions.length === 0) {
@@ -57,6 +58,14 @@ export async function release(path: string, __forceCurrentVersion?: string) {
       }
 
       return nextVersion;
+    },
+    release: async (version: string) => {
+      await changelog.upsert(changesets);
+      await changesetManager.deleteAll();
+      await git.add();
+      await git.push();
+      await git.createTag(version);
+      await git.push({ tags: true });
     },
   };
 }
