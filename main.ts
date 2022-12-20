@@ -69,10 +69,16 @@ if (import.meta.main) {
     .command('release', 'Release changesets')
     .action(async () => {
       const cRelease = await release(Deno.cwd());
-
       const nextVersion = cRelease.increment();
+      const result = await prompt([{
+        name: 'confirm',
+        message: `Release ${nextVersion}`,
+        type: Confirm,
+      }]);
 
-      console.log(nextVersion);
+      if (result.confirm) {
+        await cRelease.release(nextVersion);
+      }
     })
     .parse(Deno.args);
 }
