@@ -23,7 +23,7 @@ if (import.meta.main) {
   await new Command()
     .name('deno_changesets')
     .version(version)
-    .description('Changesets for Deno')
+    .description('🦕 Deno native way to manage versioning and changelogs.')
     .command('create', 'Add a new changeset')
     .action(async () => {
       const repo = await list(Deno.cwd());
