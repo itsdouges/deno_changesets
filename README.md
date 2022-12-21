@@ -8,15 +8,16 @@ deno run --unstable --allow-read --allow-write --allow-run https://deno.land/x/d
 
 ## Getting started
 
-There are a few constraints to consider when using deno_changesets:
+Using `deno_changesets` comes with some opinions:
 
 - Versioning follows [semver](https://semver.org)
 - Changelogs follow [keep a changelog](https://keepachangelog.com/en/1.0.0/)
-- Versions are stored as git tags
-- Repositories should expose a single module (subdirectory support coming soon)
-- Enforces minor only bumps when pre 1.0
+- Versions are stored in git tags
+- Enforces
+  [minor bumps](https://semver.org/#how-should-i-deal-with-revisions-in-the-0yz-initial-development-phase)
+  when pre-1.0
 
-See: [Adding a module](https://deno.land/add_module) on the Deno docs.
+See: [Adding a module](https://deno.land/add_module) on Deno's docs.
 
 ## Creating a changeset
 
