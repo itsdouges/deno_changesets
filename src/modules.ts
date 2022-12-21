@@ -37,7 +37,10 @@ export async function updateVersion(
     }
 
     const newFile = file.replaceAll(regex, newImportSpecifier);
-    updatedFiles.push({ path: filePath, file: newFile });
+    updatedFiles.push({
+      path: filePath.replace(Deno.cwd(), ''),
+      file: newFile,
+    });
 
     if (dryRun) {
       continue;

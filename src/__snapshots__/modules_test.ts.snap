@@ -9,7 +9,7 @@ import 'https://deno.land/x/b@1.1.1/main.ts';
 import 'https://deno.land/x/b@1.1.1/main.ts';
 import 'https://deno.land/x/b@1.1.1/utils/mod.ts';
 ",
-    path: "/Users/douges/projects/deno_changesets/src/__mocks__/multi/modules/a/mod.ts",
+    path: "/src/__mocks__/multi/modules/a/mod.ts",
   },
 ]
 `;
