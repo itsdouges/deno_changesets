@@ -21,7 +21,7 @@ export async function updateVersion(
   { dryRun = false } = {},
 ) {
   const files = (await recursiveReaddir(path)).filter((file) =>
-    /(ts|js)x?$/.exec(extname(file))
+    /(ts|js|json)x?$/.exec(extname(file))
   );
   const updatedFiles: { path: string; file: string }[] = [];
   const regex = new RegExp(

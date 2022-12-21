@@ -1,0 +1,5 @@
+{
+  "imports": {
+    "https://deno.land/x/b@0.1.0/mod.ts": "./b/index.ts"
+  }
+}

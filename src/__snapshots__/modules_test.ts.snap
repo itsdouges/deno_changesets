@@ -3,6 +3,15 @@ export const snapshot = {};
 snapshot[`shouldUpdateAllFilesWithNewModuleVersion 1`] = `
 [
   {
+    file: '{
+  "imports": {
+    "https://deno.land/x/b@1.1.1/mod.ts": "./b/index.ts"
+  }
+}
+',
+    path: "/src/__mocks__/multi/import_map.json",
+  },
+  {
     file: "import 'https://deno.land/x/b@1.1.1/mod.ts';
 import 'https://deno.land/x/b@1.1.1/mod.ts';
 import 'https://deno.land/x/b@1.1.1/main.ts';
