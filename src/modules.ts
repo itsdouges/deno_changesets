@@ -16,6 +16,7 @@ export interface Repository {
 export async function list(
   path: string,
 ): Promise<Repository> {
+  const foundModules: string[] = [];
   const stats = {
     hasTopLevelModule: false,
     hasModulesFolder: false,
@@ -30,15 +31,17 @@ export async function list(
       stats.hasModulesFolder = true;
 
       for await (const dirEntry of Deno.readDir(join(path, 'modules'))) {
-        if (dirEntry.isFile && topLevelModuleNames.exec(dirEntry.name)) {
-          stats.hasTopLevelModule = true;
-        }
-
         if (!dirEntry.isDirectory) {
           throw new Error(
             'invariant: children of modules folder must be folders',
           );
         }
+
+        if (dirEntry.isFile && topLevelModuleNames.exec(dirEntry.name)) {
+          stats.hasTopLevelModule = true;
+        }
+
+        foundModules.push(dirEntry.name);
       }
     }
   }
@@ -57,7 +60,13 @@ export async function list(
   }
 
   if (stats.hasModulesFolder) {
-    return { type: 'multi', modules: [] };
+    return {
+      type: 'multi',
+      modules: foundModules.map((mod) => ({
+        name: mod,
+        path: join(path.replace(Deno.cwd(), ''), 'modules', mod),
+      })),
+    };
   }
 
   throw new Error('invariant');

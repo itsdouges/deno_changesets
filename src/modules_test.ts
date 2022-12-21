@@ -21,7 +21,16 @@ Deno.test(async function shouldReturnMultiModule() {
 
   const actual = await list(dir);
 
-  assertEquals(actual, { type: 'multi', modules: [] });
+  assertEquals(actual, {
+    type: 'multi',
+    modules: [{
+      name: 'a',
+      path: '/src/__mocks__/multi/modules/a',
+    }, {
+      name: 'b',
+      path: '/src/__mocks__/multi/modules/b',
+    }],
+  });
 });
 
 Deno.test(function shouldThrowWhenBoth() {
