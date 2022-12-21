@@ -58,5 +58,11 @@ Deno.test(async function shouldUpdateAllFilesWithNewModuleVersion(t) {
     { dryRun: true },
   );
 
-  await assertSnapshot(t, actual);
+  actual.sort();
+
+  await assertSnapshot(t, actual.find((file) => file.file.includes('imports')));
+  await assertSnapshot(
+    t,
+    actual.find((file) => !file.file.includes('imports')),
+  );
 });

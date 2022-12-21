@@ -1,24 +1,25 @@
 export const snapshot = {};
 
 snapshot[`shouldUpdateAllFilesWithNewModuleVersion 1`] = `
-[
-  {
-    file: '{
+{
+  file: '{
   "imports": {
     "https://deno.land/x/b@1.1.1/mod.ts": "./b/index.ts"
   }
 }
 ',
-    path: "/src/__mocks__/multi/import_map.json",
-  },
-  {
-    file: "import 'https://deno.land/x/b@1.1.1/mod.ts';
+  path: "/src/__mocks__/multi/import_map.json",
+}
+`;
+
+snapshot[`shouldUpdateAllFilesWithNewModuleVersion 2`] = `
+{
+  file: "import 'https://deno.land/x/b@1.1.1/mod.ts';
 import 'https://deno.land/x/b@1.1.1/mod.ts';
 import 'https://deno.land/x/b@1.1.1/main.ts';
 import 'https://deno.land/x/b@1.1.1/main.ts';
 import 'https://deno.land/x/b@1.1.1/utils/mod.ts';
 ",
-    path: "/src/__mocks__/multi/modules/a/mod.ts",
-  },
-]
+  path: "/src/__mocks__/multi/modules/a/mod.ts",
+}
 `;
