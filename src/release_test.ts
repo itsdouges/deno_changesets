@@ -1,6 +1,6 @@
 import { join } from 'https://deno.land/std@0.170.0/path/mod.ts';
 import { assertEquals } from 'https://deno.land/std@0.170.0/testing/asserts.ts';
-import { release } from './release_single.ts';
+import { release } from './release.ts';
 
 Deno.test(async function shouldIncrementByMinorWhenDev() {
   const path = join(Deno.cwd(), 'src/__mocks__/changeset_patch');

@@ -2,8 +2,9 @@ import {
   assertEquals,
   assertRejects,
 } from 'https://deno.land/std@0.170.0/testing/asserts.ts';
+import { assertSnapshot } from 'https://deno.land/std@0.170.0/testing/snapshot.ts';
 import { join } from 'https://deno.land/std@0.170.0/path/mod.ts';
-import { list } from './modules.ts';
+import { list, updateVersion } from './modules.ts';
 
 Deno.test(async function shouldReturnSingleModule() {
   const dir = join(Deno.cwd(), '/src/__mocks__/single');
@@ -47,4 +48,15 @@ Deno.test(function shouldThrowWhenMultiModuleHasTopLevelFiles() {
   assertRejects(async () => {
     await list(dir);
   });
+});
+
+Deno.test(async function shouldUpdateAllFilesWithNewModuleVersion(t) {
+  const actual = await updateVersion(
+    join(Deno.cwd(), 'src/__mocks__/multi'),
+    'b',
+    '1.1.1',
+    { dryRun: true },
+  );
+
+  await assertSnapshot(t, actual);
 });

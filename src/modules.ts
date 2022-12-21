@@ -1,4 +1,5 @@
-import { join } from 'https://deno.land/std@0.170.0/path/mod.ts';
+import { extname, join } from 'https://deno.land/std@0.170.0/path/mod.ts';
+import { recursiveReaddir } from 'https://deno.land/x/recursive_readdir@v2.0.0/mod.ts';
 import { name } from './git.ts';
 
 const topLevelModuleNames = /(main|index|mod)\.(js|ts)x?$/;
@@ -11,6 +12,41 @@ export interface Module {
 export interface Repository {
   type: 'multi' | 'single';
   modules: Module[];
+}
+
+export async function updateVersion(
+  path: string,
+  name: string,
+  version: string,
+  { dryRun = false } = {},
+) {
+  const files = (await recursiveReaddir(path)).filter((file) =>
+    /(ts|js)x?$/.exec(extname(file))
+  );
+  const updatedFiles: { path: string; file: string }[] = [];
+  const regex = new RegExp(
+    `https://deno.land/x/${name}(@v?\\d\.\\d\.\\d)?/`,
+    'g',
+  );
+  const newImportSpecifier = `https://deno.land/x/${name}@${version}/`;
+
+  for (const filePath of files) {
+    const file = await Deno.readTextFile(filePath);
+    if (file.indexOf('https://deno.land/x/b') === -1) {
+      continue;
+    }
+
+    const newFile = file.replaceAll(regex, newImportSpecifier);
+    updatedFiles.push({ path: filePath, file: newFile });
+
+    if (dryRun) {
+      continue;
+    }
+
+    await Deno.writeTextFile(filePath, newFile, { create: true });
+  }
+
+  return updatedFiles;
 }
 
 export async function list(

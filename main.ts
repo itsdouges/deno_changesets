@@ -10,7 +10,7 @@ import { lt } from 'https://deno.land/std@0.170.0/semver/mod.ts';
 import { list } from './src/modules.ts';
 import { changeset } from './src/changeset.ts';
 import { ChangeType, changeTypes } from './src/types.ts';
-import { release } from './src/release_single.ts';
+import { release } from './src/release.ts';
 import * as git from './src/git.ts';
 
 if (import.meta.main) {

@@ -3,6 +3,8 @@ import { changeset } from './changeset.ts';
 import * as git from './git.ts';
 import * as changelog from './changelog.ts';
 import { changeTypeToSemVer, SemVer } from './types.ts';
+import { list, updateVersion } from './modules.ts';
+import { join } from 'https://deno.land/std@0.170.0/path/mod.ts';
 
 export async function release(
   path: string,
@@ -82,8 +84,17 @@ export async function release(
         return;
       }
 
+      const repo = await list(path);
+
       await changelog.upsert(changesets, nextVersion);
       await changesetManager.deleteAll();
+
+      if (repo.type === 'multi') {
+        for (const mod of repo.modules) {
+          await updateVersion(join(path, 'modules'), mod.name, nextVersion);
+        }
+      }
+
       await git.add();
       await git.commit('Version Modules');
       await git.push();
