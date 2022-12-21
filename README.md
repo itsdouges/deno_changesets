@@ -8,7 +8,7 @@ deno run --unstable --allow-read --allow-write --allow-run https://deno.land/x/d
 
 ## Getting started
 
-Using `deno_changesets` comes with some opinions:
+Currently `deno_changesets` comes with some opinions and constraints:
 
 - Versioning follows [semver](https://semver.org)
 - Changelogs follow [keep a changelog](https://keepachangelog.com/en/1.0.0/)
@@ -16,8 +16,8 @@ Using `deno_changesets` comes with some opinions:
 - Enforces
   [minor bumps](https://semver.org/#how-should-i-deal-with-revisions-in-the-0yz-initial-development-phase)
   when pre-1.0
-- If a `/modules` folder is found it's assumed that all child folders are
-  published subdirectories
+- All modules are versioned together, there is no way currently to version
+  independently
 
 See: [Adding a module](https://deno.land/add_module) on Deno's docs.
 
@@ -49,6 +49,16 @@ changelogs, and then pushes to remote.
 ➜  deno run --unstable --allow-read --allow-write --allow-run https://deno.land/x/deno_changesets/main.ts release
  ? Will publish from 0.1.0 to 0.2.0 (y/n) › Yes
 ```
+
+### Multiple modules
+
+If your repository has a top level folder called `modules` then
+`deno_changesets` will assume it's where subdirectory modules are defined. When
+releasing all references to these modules will be updated to the latest version,
+including imports and import maps.
+
+See:
+[An example release](https://github.com/itsdouges/TRIPLEX/commit/f45449f1fd3a6c2ff42b46a840bcf2ac9e040449).
 
 ### Options
 
