@@ -32,7 +32,7 @@ export async function updateVersion(
 
   for (const filePath of files) {
     const file = await Deno.readTextFile(filePath);
-    if (file.indexOf('https://deno.land/x/b') === -1) {
+    if (file.indexOf(`https://deno.land/x/${name}`) === -1) {
       continue;
     }
 

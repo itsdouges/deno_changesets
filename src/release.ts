@@ -4,7 +4,6 @@ import * as git from './git.ts';
 import * as changelog from './changelog.ts';
 import { changeTypeToSemVer, SemVer } from './types.ts';
 import { list, updateVersion } from './modules.ts';
-import { join } from 'https://deno.land/std@0.170.0/path/mod.ts';
 
 export async function release(
   path: string,
@@ -91,7 +90,7 @@ export async function release(
 
       if (repo.type === 'multi') {
         for (const mod of repo.modules) {
-          await updateVersion(join(path, 'modules'), mod.name, nextVersion);
+          await updateVersion(path, mod.name, nextVersion);
         }
       }
 
