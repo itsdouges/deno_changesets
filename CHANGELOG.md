@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this
 project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.4.0 - 2022-12-21
+
+### Added
+
+- The create command now takes an option --commit option that will commit the
+  changeset after creation.
+
 ## 0.3.0 - 2022-12-20
 
 ### Added
