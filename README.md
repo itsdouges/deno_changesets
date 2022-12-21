@@ -16,6 +16,8 @@ Using `deno_changesets` comes with some opinions:
 - Enforces
   [minor bumps](https://semver.org/#how-should-i-deal-with-revisions-in-the-0yz-initial-development-phase)
   when pre-1.0
+- If a `/modules` folder is found it's assumed that all child folders are
+  published subdirectories
 
 See: [Adding a module](https://deno.land/add_module) on Deno's docs.
 
