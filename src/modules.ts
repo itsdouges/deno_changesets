@@ -1,3 +1,4 @@
+import { join } from 'https://deno.land/std@0.170.0/path/mod.ts';
 import { name } from './git.ts';
 
 const topLevelModuleNames = /(main|index|mod)\.(js|ts)x?$/;
@@ -27,6 +28,18 @@ export async function list(
 
     if (dirEntry.isDirectory && dirEntry.name === 'modules') {
       stats.hasModulesFolder = true;
+
+      for await (const dirEntry of Deno.readDir(join(path, 'modules'))) {
+        if (dirEntry.isFile && topLevelModuleNames.exec(dirEntry.name)) {
+          stats.hasTopLevelModule = true;
+        }
+
+        if (!dirEntry.isDirectory) {
+          throw new Error(
+            'invariant: children of modules folder must be folders',
+          );
+        }
+      }
     }
   }
 

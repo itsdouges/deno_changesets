@@ -2,14 +2,11 @@ import {
   assertEquals,
   assertRejects,
 } from 'https://deno.land/std@0.170.0/testing/asserts.ts';
-import {
-  dirname,
-  fromFileUrl,
-} from 'https://deno.land/std@0.170.0/path/mod.ts';
+import { join } from 'https://deno.land/std@0.170.0/path/mod.ts';
 import { list } from './modules.ts';
 
 Deno.test(async function shouldReturnSingleModule() {
-  const dir = dirname(fromFileUrl(import.meta.url)) + '/__mocks__/single';
+  const dir = join(Deno.cwd(), '/src/__mocks__/single');
 
   const actual = await list(dir);
 
@@ -20,7 +17,7 @@ Deno.test(async function shouldReturnSingleModule() {
 });
 
 Deno.test(async function shouldReturnMultiModule() {
-  const dir = dirname(fromFileUrl(import.meta.url)) + '/__mocks__/multi';
+  const dir = join(Deno.cwd(), '/src/__mocks__/multi');
 
   const actual = await list(dir);
 
@@ -28,8 +25,15 @@ Deno.test(async function shouldReturnMultiModule() {
 });
 
 Deno.test(function shouldThrowWhenBoth() {
-  const dir = dirname(fromFileUrl(import.meta.url)) +
-    '/__mocks__/invalid-multi-mixed';
+  const dir = join(Deno.cwd(), '/src/__mocks__/invalid-multi-mixed');
+
+  assertRejects(async () => {
+    await list(dir);
+  });
+});
+
+Deno.test(function shouldThrowWhenMultiModuleHasTopLevelFiles() {
+  const dir = join(Deno.cwd(), '/src/__mocks__/invalid_multi_file');
 
   assertRejects(async () => {
     await list(dir);

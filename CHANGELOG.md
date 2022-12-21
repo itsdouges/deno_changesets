@@ -9,7 +9,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
-- The create command now takes an option --commit option that will commit the
+- The create command now takes an optional `--commit` option that commits the
   changeset after creation.
 
 ## 0.3.0 - 2022-12-20
