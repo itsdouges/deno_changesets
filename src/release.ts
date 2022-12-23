@@ -18,8 +18,7 @@ export async function release(
   const versions = await git.tags();
 
   if (versions.length === 0) {
-    // This repository has never released yet, start at 0.1.0.
-    versions.push('0.1.0');
+    versions.push('0.0.0');
   }
 
   const latestVersion = __forceVersion || versions[0];
