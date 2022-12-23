@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this
 project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.10.0 - 2022-12-23
+
+### Fixed
+
+- Fixed initial version being set to 0.2.0 instead of 0.1.0.
+
 ## 0.9.0 - 2022-12-23
 
 ### Fixed
