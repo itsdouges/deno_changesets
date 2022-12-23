@@ -106,7 +106,9 @@ if (import.meta.main) {
       const nextVersion = prodReady ? '1.0.0' : cRelease.increment();
       const result = await prompt([{
         name: 'confirm',
-        message: `Will publish from ${currentVersion} to ${nextVersion}`,
+        message: currentVersion
+          ? `Will publish from ${currentVersion} to ${nextVersion}`
+          : `Will release initial version of ${nextVersion}`,
         type: Confirm,
       }]);
 

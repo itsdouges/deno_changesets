@@ -16,6 +16,12 @@ export async function release(
 
   const changesetManager = await changeset(path);
   const versions = await git.tags();
+
+  if (versions.length === 0) {
+    // This repository has never released yet, start at 0.1.0.
+    versions.push('0.1.0');
+  }
+
   const latestVersion = __forceVersion || versions[0];
   const changesets = await changesetManager.readAll();
 
@@ -61,11 +67,6 @@ export async function release(
   const dirty = await git.isDirty();
   if (!dryRun && dirty) {
     throw new Error('invariant: dirty git');
-  }
-
-  if (versions.length === 0) {
-    // This repository has never released yet, start at 0.1.0.
-    versions.push('0.1.0');
   }
 
   return {
