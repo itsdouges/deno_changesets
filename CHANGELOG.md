@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this
 project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.8.0 - 2022-12-23
+
+### Fixed
+
+- Fixes the dev check throwing when no versions have been tagged and released
+  yet.
+
 ## 0.7.0 - 2022-12-21
 
 ### Fixed
