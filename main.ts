@@ -16,7 +16,7 @@ import * as git from './src/git.ts';
 if (import.meta.main) {
   const result = /@(\d\.\d\.\d)/.exec(Deno.mainModule);
   const [currentVersion] = await git.tags();
-  const isDevRange = lt(currentVersion, '1.0.0');
+  const isDevRange = currentVersion ? lt(currentVersion, '1.0.0') : false;
   let version = '';
 
   if (result) {
