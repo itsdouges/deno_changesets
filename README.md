@@ -1,6 +1,8 @@
 # deno_changesets
 
-🦕 Deno native way to manage versioning and changelogs.
+A [Deno](https://deno.land) native way to manage versioning and changelogs.
+
+Get started by running:
 
 ```bash
 deno run --unstable --allow-read --allow-write --allow-run https://deno.land/x/deno_changesets/main.ts --help
@@ -8,7 +10,7 @@ deno run --unstable --allow-read --allow-write --allow-run https://deno.land/x/d
 
 ## Getting started
 
-Currently `deno_changesets` comes with some opinions and constraints:
+Deno changesets comes with opinions and constraints:
 
 - Versioning follows [semver](https://semver.org)
 - Changelogs follow [keep a changelog](https://keepachangelog.com/en/1.0.0/)
