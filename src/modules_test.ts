@@ -4,7 +4,7 @@ import {
 } from 'https://deno.land/std@0.170.0/testing/asserts.ts';
 import { assertSnapshot } from 'https://deno.land/std@0.170.0/testing/snapshot.ts';
 import { join } from 'https://deno.land/std@0.170.0/path/mod.ts';
-import { list, updateVersion } from './modules.ts';
+import { dependencies, list, updateVersion } from './modules.ts';
 
 Deno.test(async function shouldReturnSingleModule() {
   const dir = join(Deno.cwd(), '/src/__mocks__/single');
@@ -65,4 +65,14 @@ Deno.test(async function shouldUpdateAllFilesWithNewModuleVersion(t) {
     t,
     actual.find((file) => !file.file.includes('imports')),
   );
+});
+
+Deno.test(async function shouldReturnLocalModuleDependencies() {
+  const path = join(Deno.cwd(), 'src/__mocks__/changeset_dependencies');
+
+  const actual = await dependencies(path, ['a', 'b']);
+
+  assertEquals(actual, {
+    '/src/__mocks__/changeset_dependencies/modules/a/mod.ts': ['b'],
+  });
 });
