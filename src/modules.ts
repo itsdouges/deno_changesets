@@ -14,20 +14,30 @@ export interface Repository {
   modules: Module[];
 }
 
+const importMatcher = (name: string) => {
+  return new RegExp(
+    `https://deno.land/x/${name}(@v?\\d\.\\d\.\\d)?/`,
+    'g',
+  );
+};
+
+const readAllFiles = async (path: string) => {
+  const files = (await recursiveReaddir(path)).filter((file) =>
+    /(ts|js|json)x?$/.exec(extname(file))
+  );
+
+  return files;
+};
+
 export async function updateVersion(
   path: string,
   name: string,
   version: string,
   { dryRun = false } = {},
 ) {
-  const files = (await recursiveReaddir(path)).filter((file) =>
-    /(ts|js|json)x?$/.exec(extname(file))
-  );
+  const files = await readAllFiles(path);
   const updatedFiles: { path: string; file: string }[] = [];
-  const regex = new RegExp(
-    `https://deno.land/x/${name}(@v?\\d\.\\d\.\\d)?/`,
-    'g',
-  );
+  const regex = importMatcher(name);
   const newImportSpecifier = `https://deno.land/x/${name}@${version}/`;
 
   for (const filePath of files) {
@@ -109,4 +119,33 @@ export async function list(
   }
 
   throw new Error('invariant');
+}
+
+interface ModuleDependencies {
+  moduleName: string;
+  dependencies: string[];
+}
+
+export async function dependencies(path: string, localModuleNames: string[]) {
+  const files = await readAllFiles(path);
+  const deps: Record<string, string[]> = {};
+
+  for (const filename of files) {
+    const file = await Deno.readTextFile(filename);
+    const key = filename.replace(Deno.cwd(), '');
+
+    for (const moduleName of localModuleNames) {
+      if (file.indexOf(`https://deno.land/x/${moduleName}`) === -1) {
+        continue;
+      }
+
+      if (!deps[key]) {
+        deps[key] = [];
+      }
+
+      deps[key].push(moduleName);
+    }
+  }
+
+  return deps;
 }
