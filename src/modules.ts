@@ -123,10 +123,11 @@ export async function list(
 
 interface ModuleDependencies {
   moduleName: string;
+  path: string;
   dependencies: string[];
 }
 
-export async function dependencies(path: string, localModuleNames: string[]) {
+export async function dependencies(path: string, moduleNames: string[]) {
   const files = await readAllFiles(path);
   const deps: Record<string, string[]> = {};
 
@@ -134,7 +135,7 @@ export async function dependencies(path: string, localModuleNames: string[]) {
     const file = await Deno.readTextFile(filename);
     const key = filename.replace(Deno.cwd(), '');
 
-    for (const moduleName of localModuleNames) {
+    for (const moduleName of moduleNames) {
       if (file.indexOf(`https://deno.land/x/${moduleName}`) === -1) {
         continue;
       }
@@ -147,5 +148,20 @@ export async function dependencies(path: string, localModuleNames: string[]) {
     }
   }
 
-  return deps;
+  const value: ModuleDependencies[] = Object.entries(deps).map((
+    [path, value],
+  ) => {
+    const moduleName = /modules\/(.+)\//g.exec(path);
+    if (!moduleName) {
+      throw new Error('invariant');
+    }
+
+    return {
+      moduleName: moduleName[1],
+      path,
+      dependencies: value,
+    };
+  });
+
+  return value;
 }

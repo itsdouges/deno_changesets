@@ -102,6 +102,28 @@ export async function changeset(path: string) {
         });
       }
 
+      const changedModules = changesets.flatMap((cs) => cs.modules).map((cs) =>
+        cs.name
+      );
+
+      const changedModulesDependants = await modules.dependencies(
+        path,
+        changedModules,
+      );
+
+      changedModulesDependants.forEach((mod) => {
+        mod.dependencies.forEach((dep) => {
+          changesets.push({
+            description: `Upgraded \`${dep}\` to @{nextVersion}`,
+            modules: [{
+              changeType: 'fixed',
+              name: mod.moduleName,
+              path: mod.path,
+            }],
+          });
+        });
+      });
+
       return changesets;
     },
     deleteAll: async () => {
