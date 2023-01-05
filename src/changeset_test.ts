@@ -85,12 +85,12 @@ Deno.test(async function shouldReturnImplicitChangesets() {
       ],
     },
     {
-      description: 'Upgraded `b` to @{nextVersion}',
+      description: 'Upgraded "b" module to @{nextVersion}.',
       modules: [
         {
           changeType: 'fixed',
           name: 'a',
-          path: '/src/__mocks__/changeset_dependencies/modules/a/mod.ts',
+          path: '/src/__mocks__/changeset_dependencies/modules/a',
         },
       ],
     },
