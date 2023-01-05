@@ -60,7 +60,7 @@ releasing all references to these modules will be updated to the latest version,
 including imports and import maps.
 
 See:
-[An example release](https://github.com/itsdouges/TRIPLEX/commit/f45449f1fd3a6c2ff42b46a840bcf2ac9e040449).
+[An example release](https://github.com/itsdouges/TRIPLEX/commit/97ff2959a05b53dc814fa7977a81fece2b7d0189).
 
 ### Options
 
