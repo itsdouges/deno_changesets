@@ -21,9 +21,11 @@ const importMatcher = (name: string) => {
   );
 };
 
-const readAllFiles = async (path: string) => {
+const readAllFiles = async (path: string, excludeJson = false) => {
   const files = (await recursiveReaddir(path)).filter((file) =>
-    /(ts|js|json)x?$/.exec(extname(file))
+    excludeJson
+      ? /(ts|js)x?$/.exec(extname(file))
+      : /(ts|js|json)x?$/.exec(extname(file))
   );
 
   return files;
@@ -128,7 +130,7 @@ interface ModuleDependencies {
 }
 
 export async function dependencies(path: string, moduleNames: string[]) {
-  const files = await readAllFiles(path);
+  const files = await readAllFiles(path, true);
   const deps: Record<string, string[]> = {};
 
   for (const filename of files) {
@@ -151,14 +153,15 @@ export async function dependencies(path: string, moduleNames: string[]) {
   const value: ModuleDependencies[] = Object.entries(deps).map((
     [path, value],
   ) => {
-    const moduleName = /modules\/(.+)\//g.exec(path);
-    if (!moduleName) {
+    const moduleName = /modules\/(\w+)\//g.exec(path);
+    const modulePath = /(.+modules\/\w+)\//g.exec(path);
+    if (!moduleName || !modulePath) {
       throw new Error('invariant');
     }
 
     return {
       moduleName: moduleName[1],
-      path,
+      path: modulePath[1],
       dependencies: value,
     };
   });

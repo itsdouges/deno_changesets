@@ -114,7 +114,7 @@ export async function changeset(path: string) {
       changedModulesDependants.forEach((mod) => {
         mod.dependencies.forEach((dep) => {
           changesets.push({
-            description: `Upgraded \`${dep}\` to @{nextVersion}`,
+            description: `Upgraded "${dep}" module to @{nextVersion}.`,
             modules: [{
               changeType: 'fixed',
               name: mod.moduleName,

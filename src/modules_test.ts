@@ -73,7 +73,7 @@ Deno.test(async function shouldReturnLocalModuleDependencies() {
   const actual = await dependencies(path, ['a', 'b']);
 
   assertEquals(actual, [{
-    path: '/src/__mocks__/changeset_dependencies/modules/a/mod.ts',
+    path: '/src/__mocks__/changeset_dependencies/modules/a',
     moduleName: 'a',
     dependencies: ['b'],
   }]);
