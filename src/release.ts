@@ -10,7 +10,7 @@ export async function release(
   { dryRun = false, __forceVersion = '' } = {},
 ) {
   const name = await git.branchName();
-  if (!['main', 'master'].includes(name)) {
+  if (!dryRun && !['main', 'master'].includes(name)) {
     throw new Error('invariant: must be ran on primary branch');
   }
 

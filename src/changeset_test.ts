@@ -7,6 +7,7 @@ import {
   assertEquals,
   assertRejects,
 } from 'https://deno.land/std@0.170.0/testing/asserts.ts';
+import { join } from 'https://deno.land/std@0.170.0/path/mod.ts';
 
 Deno.test(async function shouldThrowCreatingChangesetWithUnknownModule() {
   const dir = dirname(fromFileUrl(import.meta.url)) + '/__mocks__/single';
@@ -53,7 +54,6 @@ Deno.test(async function shouldParseChangesets() {
 
 Deno.test(async function shouldCreateChangeset(t) {
   const dir = dirname(fromFileUrl(import.meta.url)) + '/__mocks__/single';
-
   const { create, deleteAll } = await changeset(dir);
 
   await t.step('create', async () => {
@@ -65,4 +65,34 @@ Deno.test(async function shouldCreateChangeset(t) {
   } catch (_) {
     //
   }
+});
+
+Deno.test(async function shouldReturnImplicitChangesets() {
+  const dir = join(Deno.cwd(), 'src/__mocks__/changeset_dependencies');
+  const { readAll } = await changeset(dir);
+
+  const changesets = await readAll();
+
+  assertEquals(changesets, [
+    {
+      description: 'Removed an API, sorry!',
+      modules: [
+        {
+          name: 'b',
+          changeType: 'removed',
+          path: '/src/__mocks__/changeset_dependencies/modules/b',
+        },
+      ],
+    },
+    {
+      description: 'Upgraded `b` to @{nextVersion}',
+      modules: [
+        {
+          changeType: 'fixed',
+          name: 'a',
+          path: '/src/__mocks__/changeset_dependencies/modules/a/mod.ts',
+        },
+      ],
+    },
+  ]);
 });
