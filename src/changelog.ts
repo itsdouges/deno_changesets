@@ -38,6 +38,13 @@ function sortByModule(changesets: Changeset[]) {
   return Object.values(changeMap);
 }
 
+function replaceChangeVariables(
+  change: string,
+  { nextVersion }: { nextVersion: string },
+) {
+  return change.replaceAll('@{nextVersion}', nextVersion);
+}
+
 export async function upsert(
   changesets: Changeset[],
   nextVersion: string,
@@ -72,7 +79,10 @@ export async function upsert(
     );
 
     for (const change of module.changes) {
-      release.addChange(change.type, new Change(change.description));
+      release.addChange(
+        change.type,
+        new Change(replaceChangeVariables(change.description, { nextVersion })),
+      );
     }
 
     changelog.addRelease(
